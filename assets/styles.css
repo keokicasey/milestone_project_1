@@ -3,19 +3,22 @@ body {
 }
 
 #title {
-    text-align: center;
-    display: flex;
-    order: 1;
-}
-
-#score {
-    text-align: left;
+    width: 200px;
+    justify-content: center;
     display: flex;
     order: 0;
 }
 
+#play {
+    width: 200px;
+    display: flex;
+    justify-content: center;
+    order: 1;
+}
+
 #timer {
-    text-align: right;
+    width: 200px;
+    justify-content: center;
     display: flex;
     order: 2;
 }
@@ -23,6 +26,11 @@ body {
 #info {
     display: flex;
     justify-content: space-between;
+}
+
+#play:hover {
+    color: blue;
+    cursor: default;
 }
 
 #floor {
