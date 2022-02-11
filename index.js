@@ -2,30 +2,26 @@
 let timer = document.querySelector("#timer");
 let play = document.querySelector("#play");
 
+// create player character
+const element = document.createElement("div");
+element.style.width = "96px";
+element.style.height = "96px";
+element.style.backgroundColor = "black";
+element.style.position = "fixed";
+element.style.bottom = "201px";
+element.style.left = "201px";
+
 // timer
-timer = 0;
 
-// player character
-function playerCharacter() {
 
-    const element = document.createElement("div");
-    element.style.position = "fixed";
-    element.style.width = "64px";
-    element.style.height = "64px";
-    element.style.bottom = "201px";
-    element.style.backgroundColor = "black";
-    document.body.append(element)
+// jump function
+function jump() {
 
-    // jump function
-    function jump() {
+}
 
-    }
-
-    // slide function
-    function slide() {
-
-    }
-
+// slide function
+function slide() {
+    element.style.height = "48px";
 }
 
 // obstacle object
@@ -36,5 +32,17 @@ function playerCharacter() {
 play.addEventListener("click", function() {
     console.log("clicked")
     play.style.display = "none";
-    playerCharacter();
+    document.body.append(element)
+
+    document.addEventListener("keydown", function(e) {
+        if (e.key === "ArrowDown") {
+            slide()
+        }
+
+    document.addEventListener("keyup", function(e) {
+        if (e.key === "ArrowDown") {
+            element.style.height = "96px";
+        }
+    })
+    })
 });
