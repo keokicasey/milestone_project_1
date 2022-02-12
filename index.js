@@ -3,21 +3,10 @@ let timer = document.querySelector("#timer");
 let play = document.querySelector("#play");
 
 
-// create player character
-const element = document.createElement("div");
-const elementID = document.createAttribute("id");
-elementID.value = "player";
-element.setAttributeNode(elementID);
-element.style.width = "96px";
-element.style.height = "96px";
-element.style.borderStyle = "solid";
-element.style.borderWidth = "3px";
-element.style.position = "fixed";
-element.style.bottom = "200px";
-element.style.left = "200px";
-
+// time variables
 var seconds = 0
 var minutes = 0
+
 
 // timer
 function startTimer() {
@@ -38,9 +27,35 @@ function startTimer() {
 }
 
 
+// create player character
+const element = document.createElement("div");
+const elementID = document.createAttribute("id");
+elementID.value = "player";
+element.setAttributeNode(elementID);
+element.style.width = "96px";
+element.style.height = "96px";
+element.style.backgroundColor = "black";
+element.style.position = "fixed";
+element.style.bottom = "200px";
+element.style.left = "200px";
+
+
+async function jump() {
+    element.style.animation = "jump 0.5s infinite, rotate 0.5s infinite"
+    return;
+};
+
+async function land() {
+    await jump()
+    setTimeout(() => {
+        element.style.animation = ""
+    }, 400)
+};
+
 // obstacle object
     // obstacle comes from right side of screen towards left side of screen
     // if player collides with obstacle, game over
+
 
 // start the game
 play.addEventListener("click", function() {
@@ -58,7 +73,7 @@ play.addEventListener("click", function() {
     document.body.append(element)
 
 
-    // handle slide function
+    // handle shrink function
     document.addEventListener("keydown", function(e) {
         if (e.key === "ArrowDown") {
             element.style.height = "48px";
@@ -74,12 +89,14 @@ play.addEventListener("click", function() {
     // handle jump function
     document.addEventListener("keydown", function(e) {
         if (e.key === "ArrowUp") {
-            element.style.bottom = "296px"
+            jump()
         }
     })
     document.addEventListener("keyup", function(e) {
         if (e.key === "ArrowUp") {
-            element.style.bottom = "200px"
+            land()
         }
     })
+
+
 });
