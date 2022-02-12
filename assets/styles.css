@@ -1,6 +1,7 @@
 body {
     font-family: 'Courier New', Courier, monospace;
     font-size: large;
+    background-color: lightcoral;
 }
 
 #title {
@@ -30,7 +31,7 @@ body {
 }
 
 #play:hover {
-    color: steelblue;
+    color: white;
     cursor: default;
 }
 
@@ -44,5 +45,9 @@ body {
 }
 
 @keyframes jump {
+    80% {transform: translateY(-499px);}
+}
+
+@keyframes rotate {
     100% {transform: rotate(180deg);}
 }
