@@ -4,9 +4,8 @@ let play = document.querySelector("#play");
 
 
 // time variables
-var seconds = 0
-var minutes = 0
-
+var seconds = 0;
+var minutes = 0;
 
 // timer
 function startTimer() {
@@ -39,47 +38,84 @@ function newObject(name, width, height, hex) {
     return element;
 }
 
-
 // create player object
 const player = newObject("player", 96, 96, "9AA57C")
 
-
 // create ground obstacle object
 const groundObstacle = newObject("groundObstacle", 48, 48, "4B564D")
-
 
 // create air obstacle object
 const airObstacle = newObject("airObstacle", 96, 192, "4B564D")
 
 
-// move function
-function move(element, x, y) {
+// position function
+function position(element, x, y) {
     element.style.position = "fixed";
     element.style.left = x + "px";
     element.style.bottom = y + "px";
 }
 
+// position player object
+position(player, 200, 200)
 
-// move player object
-move(player, 200, 200)
+// position ground obstacle object
+position(groundObstacle, 392, 200)
+
+// position air obstacle object
+position(airObstacle, 584, 249)
 
 
-// move ground obstacle object
-move(groundObstacle, 392, 200)
-
-
-// move air obstacle object
-move(airObstacle, 584, 248)
+// control variables
+let left;
+let bottom = 200;
+let isJumping = false;
+let isDucking = false;
+let isMoving = false;
 
 
 // jump function
 function jump() {
+    if (isJumping) return;
+    if (isDucking) return;
+    let timerUpId = setInterval(() => {
+        if (bottom > 344) {
+            clearInterval(timerUpId);
+            let timerDownId = setInterval(() => {
+                if (bottom <= 212) {
+                    clearInterval(timerDownId);
+                    isJumping = false;
+                }
+                bottom -= 12;;
+                player.style.bottom = bottom + "px";
+            }, 20);
+        }
+        isJumping = true;
+        bottom += 12;
+        player.style.bottom = bottom + "px";
+    }, 20);
+};
 
+
+// move function
+async function move(element, start, finish) {
+    element.style.position = "fixed"
+    element.style.left = start + "px"
+    left = start
+    let moveTimerId = setInterval(() => {
+        isMoving = true;
+        left -= 2
+        element.style.left = left + "px"
+        if (left < finish) {
+            clearInterval(moveTimerId)
+            element.style.left = start + "px"
+            isMoving = false;
+        }
+        return element;
+    }, 1)
 }
 
 
 // collision detection
-
 
 
 
@@ -93,6 +129,35 @@ play.addEventListener("click", function() {
 
     // start timer
     startTimer()
+
+
+    setInterval(() => {
+        if (isMoving) return;
+        move(airObstacle, 2000, -100)
+    }, 5000)
+
+
+    // jump and duck functions
+    document.addEventListener("keydown", function(e) {
+        if (e.key === "ArrowUp") {
+            if (e.repeat) return;
+            jump()
+        }
+        if (e.key === "ArrowDown") {
+            if (isJumping) return;
+            player.style.height = "48px"
+            isDucking = true;
+        }
+    })
+
+
+    // unDuck function
+    document.addEventListener("keyup", function(e) {
+        if (e.key === "ArrowDown") {
+            player.style.height = "96px"
+            isDucking = false;
+        }
+    })
 
 
 });
