@@ -82,6 +82,7 @@ function jump() {
 
 
 
+
 // start the game
 play.addEventListener("click", function() {
 
