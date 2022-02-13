@@ -27,34 +27,59 @@ function startTimer() {
 }
 
 
-// create player character
-const element = document.createElement("div");
-const elementID = document.createAttribute("id");
-elementID.value = "player";
-element.setAttributeNode(elementID);
-element.style.width = "96px";
-element.style.height = "96px";
-element.style.backgroundColor = "black";
-element.style.position = "fixed";
-element.style.bottom = "200px";
-element.style.left = "200px";
+// new object function
+function newObject(name, width, height, hex) {
+    const element = document.createElement("div");
+    const elementID = document.createAttribute("id")
+    elementID.value = name;
+    element.style.width = width + "px"
+    element.style.height = height + "px"
+    element.style.backgroundColor = "#" + hex
+    document.body.append(element)
+    return element;
+}
 
 
-async function jump() {
-    element.style.animation = "jump 0.5s infinite, rotate 0.5s infinite"
-    return;
-};
+// create player object
+const player = newObject("player", 96, 96, "9AA57C")
 
-async function land() {
-    await jump()
-    setTimeout(() => {
-        element.style.animation = ""
-    }, 400)
-};
 
-// obstacle object
-    // obstacle comes from right side of screen towards left side of screen
-    // if player collides with obstacle, game over
+// create ground obstacle object
+const groundObstacle = newObject("groundObstacle", 48, 48, "4B564D")
+
+
+// create air obstacle object
+const airObstacle = newObject("airObstacle", 96, 192, "4B564D")
+
+
+// move function
+function move(element, x, y) {
+    element.style.position = "fixed";
+    element.style.left = x + "px";
+    element.style.bottom = y + "px";
+}
+
+
+// move player object
+move(player, 200, 200)
+
+
+// move ground obstacle object
+move(groundObstacle, 392, 200)
+
+
+// move air obstacle object
+move(airObstacle, 584, 248)
+
+
+// jump function
+function jump() {
+
+}
+
+
+// collision detection
+
 
 
 // start the game
@@ -67,36 +92,6 @@ play.addEventListener("click", function() {
 
     // start timer
     startTimer()
-
-
-    // append player character to body
-    document.body.append(element)
-
-
-    // handle shrink function
-    document.addEventListener("keydown", function(e) {
-        if (e.key === "ArrowDown") {
-            element.style.height = "48px";
-        }
-    })
-    document.addEventListener("keyup", function(e) {
-        if (e.key === "ArrowDown") {
-            element.style.height = "96px";
-        }
-    })
-
-
-    // handle jump function
-    document.addEventListener("keydown", function(e) {
-        if (e.key === "ArrowUp") {
-            jump()
-        }
-    })
-    document.addEventListener("keyup", function(e) {
-        if (e.key === "ArrowUp") {
-            land()
-        }
-    })
 
 
 });
