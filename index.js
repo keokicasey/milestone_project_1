@@ -2,7 +2,6 @@
 let timer = document.querySelector("#timer");
 let play = document.querySelector("#play");
 
-
 // time variables
 var seconds = 0;
 var minutes = 0;
@@ -25,139 +24,143 @@ function startTimer() {
     }, 1000) 
 }
 
-
-// new object function
-function newObject(name, width, height, hex) {
-    const element = document.createElement("div");
-    const elementID = document.createAttribute("id")
-    elementID.value = name;
-    element.style.width = width + "px"
-    element.style.height = height + "px"
-    element.style.backgroundColor = "#" + hex
-    document.body.append(element)
-    return element;
-}
-
-// create player object
-const player = newObject("player", 96, 96, "9AA57C")
-
-// create ground obstacle object
-const groundObstacle = newObject("groundObstacle", 48, 48, "4B564D")
-
-// create air obstacle object
-const airObstacle = newObject("airObstacle", 96, 192, "4B564D")
-
-
-// position function
-function position(element, x, y) {
-    element.style.position = "fixed";
-    element.style.left = x + "px";
-    element.style.bottom = y + "px";
-}
-
-// position player object
-position(player, 200, 200)
-
-// position ground obstacle object
-position(groundObstacle, 392, 200)
-
-// position air obstacle object
-position(airObstacle, 584, 249)
-
-
-// control variables
-let left;
-let bottom = 200;
+const grid = document.querySelector(".grid")
+const player = document.createElement("div")
+let playerLeftSpace = 60
+let playerBottomSpace = 60
+let isGameOver;
+let obstacleCount = 2
+let obstacles = []
+let upTimerId;
+let downTimerId;
 let isJumping = false;
-let isDucking = false;
-let isMoving = false;
+let isFalling = false;
+let obstacleTimerId = true;
+let time = 0
 
+function createPlayer() {
+    grid.appendChild(player)
+    player.classList.add("player")
+    player.style.left = playerLeftSpace + "px"
+    player.style.bottom = playerBottomSpace + "px"
+}
 
-// jump function
+class Obstacle {
+    constructor(newObstacleLeft) {
+        this.left = newObstacleLeft
+        this.bottom = 60
+        this.visual = document.createElement("div")
+
+        const visual = this.visual
+        visual.classList.add("obstacle")
+        visual.style.left = this.left + "px"
+        visual.style.bottom = this.bottom + "px"
+        grid.appendChild(visual)
+    }
+}
+
+function createObstacles() {
+    if (obstacleTimerid = false) return;
+    for (let i = 0; i < obstacleCount; i++) {
+        let obstacleGgap = 800 / obstacleCount
+        let newObstacleLeft = 800 + i * obstacleGgap
+        let newObstacle = new Obstacle(newObstacleLeft)
+        obstacles.push(newObstacle)
+    }
+}
+
+function moveObstacles() {
+    if (obstacleTimerId = false) return;
+    obstacles.forEach((obstacle) => {
+        obstacle.left -=8
+        let visual = obstacle.visual
+        visual.style.left = obstacle.left + "px"
+
+        // player/obstacle collision
+        obstacles.forEach((obstacle) => {
+            if (
+                (playerBottomSpace >= obstacle.bottom) &&
+                (playerBottomSpace <= obstacle.bottom + 30) &&
+                ((playerLeftSpace + 60) >= obstacle.left) &&
+                (playerLeftSpace <= (obstacle.left + 30))
+            ) {
+                gameOver()
+                obstacleTimerId = false;
+            }
+        })
+
+        if (obstacle.left < 0) {
+            let firstObstacle = obstacles[0].visual
+            firstObstacle.classList.remove("obstacle")
+            obstacles.shift()
+            console.log(obstacles)
+            let newObstacle = new Obstacle(710)
+            obstacles.push(newObstacle)
+        }
+    })
+}
+
 function jump() {
     if (isJumping) return;
-    if (isDucking) return;
-    let timerUpId = setInterval(() => {
-        if (bottom > 344) {
-            clearInterval(timerUpId);
-            let timerDownId = setInterval(() => {
-                if (bottom <= 212) {
-                    clearInterval(timerDownId);
-                    isJumping = false;
-                }
-                bottom -= 12;;
-                player.style.bottom = bottom + "px";
-            }, 20);
+    clearInterval(downTimerId)
+    isFalling = false;
+    upTimerId = setInterval(() => {
+        playerBottomSpace +=15
+        player.style.bottom = playerBottomSpace + "px"
+        if (playerBottomSpace > 200) {
+            fall()
         }
-        isJumping = true;
-        bottom += 12;
-        player.style.bottom = bottom + "px";
-    }, 20);
-};
-
-
-// move function
-async function move(element, start, finish) {
-    element.style.position = "fixed"
-    element.style.left = start + "px"
-    left = start
-    let moveTimerId = setInterval(() => {
-        isMoving = true;
-        left -= 2
-        element.style.left = left + "px"
-        if (left < finish) {
-            clearInterval(moveTimerId)
-            element.style.left = start + "px"
-            isMoving = false;
-        }
-        return element;
-    }, 1)
+    }, 30)
+    isJumping = true;
 }
 
+function fall() {
+    clearInterval(upTimerId)
+    isJumping = false;
+    isFalling = true;
+    downTimerId = setInterval(() => {
+        playerBottomSpace -=5
+        player.style.bottom = playerBottomSpace + "px"
+        if (playerBottomSpace <= 60) {
+            clearInterval(downTimerId)
+        }
+    }, 30)
+}
 
-// collision detection
+function gameOver() {
+    console.log("game over")
+    isGameOver = true;
+    while (grid.firstChild) {
+        grid.removeChild(grid.firstChild)
+    }
+    // Display minutes + ":" + seconds
+    clearInterval(upTimerId)
+    clearInterval(downTimerId)
+    obstacleTimerid = false;
+}
 
+function control(e) {
+    if (e.key === "ArrowUp") {
+        jump()
+    }
+}
 
+function start() {
+    if (!isGameOver)
+    {
+        startTimer()
+        createPlayer()
+        createObstacles()
+        if (obstacleTimerId) {
+            setInterval(moveObstacles, 30)
 
-// start the game
+        }
+        document.addEventListener("keydown", control)
+    }
+}
+
 play.addEventListener("click", function() {
 
-
-    // remove play button
-    play.style.display = "none";
-
-
-    // start timer
-    startTimer()
-
-
-    setInterval(() => {
-        if (isMoving) return;
-        move(airObstacle, 2000, -100)
-    }, 5000)
-
-
-    // jump and duck functions
-    document.addEventListener("keydown", function(e) {
-        if (e.key === "ArrowUp") {
-            if (e.repeat) return;
-            jump()
-        }
-        if (e.key === "ArrowDown") {
-            if (isJumping) return;
-            player.style.height = "48px"
-            isDucking = true;
-        }
-    })
-
-
-    // unDuck function
-    document.addEventListener("keyup", function(e) {
-        if (e.key === "ArrowDown") {
-            player.style.height = "96px"
-            isDucking = false;
-        }
-    })
-
-
-});
+    // start the game
+    start()
+})
