@@ -21,7 +21,7 @@ let randomNumber;
 let isJumping = false;
 let isFalling = false;
 
-// timerId variables
+// timer id variables
 let upTimerId;
 let downTimerId;
 let obstacleTimerId;
@@ -77,7 +77,7 @@ class GroundObstacle {
 class AirObstacle {
     constructor(newObstacleLeft) {
         this.left = newObstacleLeft;
-        this.bottom = 91;
+        this.bottom = 90;
         this.visual = document.createElement("div");
         const visual = this.visual;
         visual.classList.add("obstacle");
@@ -92,7 +92,6 @@ function getRandomNumber() {
     return randomNumber = Math.random()
 }
 
-
 // create obstacles function
 function createObstacles() {
     if (obstacleTimerid = false) return;
@@ -104,11 +103,9 @@ function createObstacles() {
         if (randomNumber < .5) {
             let newObstacle = new GroundObstacle(newObstacleLeft);
             obstacles.push(newObstacle);
-            console.log("ground obstacle")
         } else {
             let newObstacle = new AirObstacle(newObstacleLeft);
             obstacles.push(newObstacle);
-            console.log("air obstacle")
         }
     }
 }
@@ -125,7 +122,7 @@ function moveObstacles() {
             obstacles.forEach((obstacle) => {
                 if (
                     ((playerBottomSpace + 60) >= obstacle.bottom) &&
-                    (playerBottomSpace <= (obstacle.bottom + 30)) &&
+                    (playerBottomSpace <= (obstacle.bottom + 50)) &&
                     ((playerLeftSpace + 60) >= obstacle.left) &&
                     (playerLeftSpace <= (obstacle.left + 30))
                 ) {
@@ -144,11 +141,9 @@ function moveObstacles() {
                 if (randomNumber < .5) {
                     let newObstacle = new GroundObstacle(830);
                     obstacles.push(newObstacle);
-                    console.log("ground obstacle")
                 } else {
                     let newObstacle = new AirObstacle(830);
                     obstacles.push(newObstacle);
-                    console.log("air obstacle")
                 }
             };
         });
@@ -180,7 +175,7 @@ function jump() {
 function duck() {
     if (isJumping) return;
     if (isFalling) return;
-    playerBottomSpace = 30;
+    playerBottomSpace = 29;
     player.style.height = "30px"
 }
 
@@ -203,33 +198,40 @@ function control(e) {
 
 // game over function
 function gameOver() {
+    // clear timer ids
+    clearInterval(upTimerId);
+    clearInterval(downTimerId);
+    clearInterval(obstacleTimerId);
+    clearInterval(timerTimerId);
+
+    // clear control states
+    isJumping = false;
+    isFalling = false;
+
+    // remove obstacles
     obstacles.forEach((i) => {
         firstObstacle = obstacles[0].visual;
         firstObstacle.classList.remove("obstacle");
         obstacles.shift();
     });
+
+    // remove player
     player.remove();
-    console.log("game over");
-    clearInterval(upTimerId);
-    clearInterval(downTimerId);
+
+    // leaves time shown after death
     if (seconds >= 0 && seconds <= 9) {
         timer.textContent = minutes + ":" + "0" + seconds;
-        console.log(minutes + ":" + "0" + seconds);
     };
     if (seconds >= 10 && seconds <= 59) {
         timer.textContent = minutes + ":" + seconds;
-        console.log(minutes + ":" + seconds);
     };
+
+    // add play button
     info.appendChild(play);
-    clearInterval(obstacleTimerId);
-    clearInterval(timerTimerId);
-    isJumping = false;
-    isFalling = false;
 };
 
 // start function
 function start() {
-
     // reset timer
     resetTimer();
 
