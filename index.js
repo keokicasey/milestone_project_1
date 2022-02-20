@@ -31,15 +31,11 @@ let obstacleTimerId;
 function startTimer() {
     timerTimerId = setInterval(() => {
         seconds += 1;
-        if (seconds >= 0 && seconds <= 9) {
-            timer.textContent = minutes + ":" + "0" + seconds;
-        };
-        if (seconds >= 10 && seconds <= 59) {
-            timer.textContent = minutes + ":" + seconds;
-        };
+        if (seconds >= 0 && seconds <= 9) timer.textContent = minutes + ":" + "0" + seconds;
+        if (seconds >= 10 && seconds <= 59) timer.textContent = minutes + ":" + seconds;
         if (seconds == 60) {
-            minutes += 1
-            seconds = 0
+            minutes += 1;
+            seconds = 0;
             timer.textContent = minutes + ":" + "0" + seconds;
         };
     }, 1000);
@@ -50,7 +46,7 @@ function resetTimer() {
     seconds = 0;
     minutes = 0;
     timer.textContent = minutes + ":" + "0" + seconds;
-}
+};
 
 // create player function
 function createPlayer() {
@@ -86,12 +82,12 @@ class AirObstacle {
         visual.style.bottom = this.bottom + "px";
         grid.appendChild(visual);
     };
-}
+};
 
 // random number function
 function getRandomNumber() {
-    return randomNumber = Math.random()
-}
+    return randomNumber = Math.random();
+};
 
 // create obstacles function
 function createObstacles() {
@@ -99,17 +95,18 @@ function createObstacles() {
     for (let i = 0; i < obstacleCount; i++) {
         let obstacleGgap = 830 / obstacleCount;
         let newObstacleLeft = 830 + (i * obstacleGgap);
+        
         // randomly create ground or air obstacle
-        getRandomNumber()
+        getRandomNumber();
         if (randomNumber < .5) {
             let newObstacle = new GroundObstacle(newObstacleLeft);
             obstacles.push(newObstacle);
         } else {
             let newObstacle = new AirObstacle(newObstacleLeft);
             obstacles.push(newObstacle);
-        }
-    }
-}
+        };
+    };
+};
 
 // move obstacles function 
 function moveObstacles() {
@@ -126,9 +123,7 @@ function moveObstacles() {
                     (playerBottomSpace <= (obstacle.bottom + 50)) &&
                     ((playerLeftSpace + 60) >= obstacle.left) &&
                     (playerLeftSpace <= (obstacle.left + 30))
-                ) {
-                    gameOver();
-                };
+                ) gameOver();
             });
 
             // delete obstacle
@@ -166,7 +161,7 @@ function jump() {
                 playerBottomSpace -=20;;
                 player.style.bottom = playerBottomSpace + "px";
             }, 30);
-        }
+        };
         isJumping = true;
         playerBottomSpace += 20;
         player.style.bottom = playerBottomSpace + "px";
@@ -179,29 +174,30 @@ function duck() {
     if (isFalling) return;
     isDucking = true;
     playerBottomSpace = 29;
-    player.style.height = "30px"
+    player.style.height = "30px";
 }
 
 // controls function
 function control(e) {
-    if (e.key === "w") {
+    if (e.key === "w" || e.key === "ArrowUp") {
         if (e.repeat) return;
         jump();
     };
-    if (e.key === "s") {
-        duck()
+    if (e.key === "s" || e.key === "ArrowDown") {
+        duck();
         document.addEventListener("keyup", function (e) {
-            if (e.key === "s") {
+            if (e.key === "s" || e.key === "ArrowDown") {
                 isDucking = false;
                 playerBottomSpace = 60;
-                player.style.height = "60px"
-            }
-        })
-    }
+                player.style.height = "60px";
+            };
+        });
+    };
 };
 
 // game over function
 function gameOver() {
+
     // clear timer ids
     clearInterval(upTimerId);
     clearInterval(downTimerId);
@@ -222,13 +218,9 @@ function gameOver() {
     // remove player
     player.remove();
 
-    // leaves time shown after death
-    if (seconds >= 0 && seconds <= 9) {
-        timer.textContent = minutes + ":" + "0" + seconds;
-    };
-    if (seconds >= 10 && seconds <= 59) {
-        timer.textContent = minutes + ":" + seconds;
-    };
+    // stop timer
+    if (seconds >= 0 && seconds <= 9) timer.textContent = minutes + ":" + "0" + seconds;
+    if (seconds >= 10 && seconds <= 59) timer.textContent = minutes + ":" + seconds;
 
     // add play button
     info.appendChild(play);
@@ -236,6 +228,7 @@ function gameOver() {
 
 // start function
 function start() {
+
     // reset timer
     resetTimer();
 
