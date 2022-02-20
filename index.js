@@ -95,7 +95,7 @@ function createObstacles() {
     for (let i = 0; i < obstacleCount; i++) {
         let obstacleGgap = 830 / obstacleCount;
         let newObstacleLeft = 830 + (i * obstacleGgap);
-        
+
         // randomly create ground or air obstacle
         getRandomNumber();
         if (randomNumber < .5) {
@@ -179,14 +179,14 @@ function duck() {
 
 // controls function
 function control(e) {
-    if (e.key === "w" || e.key === "ArrowUp") {
+    if (e.key === "w") {
         if (e.repeat) return;
         jump();
     };
-    if (e.key === "s" || e.key === "ArrowDown") {
+    if (e.key === "s") {
         duck();
         document.addEventListener("keyup", function (e) {
-            if (e.key === "s" || e.key === "ArrowDown") {
+            if (e.key === "s") {
                 isDucking = false;
                 playerBottomSpace = 60;
                 player.style.height = "60px";
