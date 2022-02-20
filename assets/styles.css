@@ -58,7 +58,7 @@ body {
 
 .obstacle {
     width: 30px;
-    height: 30px;
+    height: 60px;
     background-color: #252525;
     position: absolute;
 }

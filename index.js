@@ -14,12 +14,17 @@ let playerLeftSpace = 60;
 let playerBottomSpace = 60;
 let obstacleCount = 1;
 let obstacles = [];
-let upTimerId;
-let downTimerId;
+let firstObstacle;
+let randomNumber;
+
+// control state variables
 let isJumping = false;
 let isFalling = false;
+
+// timerId variables
+let upTimerId;
+let downTimerId;
 let obstacleTimerId;
-let firstObstacle;
 
 // start timer function
 function startTimer() {
@@ -54,12 +59,12 @@ function createPlayer() {
     player.style.bottom = 60 + "px";
 };
 
-class Obstacle {
+// ground obstacle class
+class GroundObstacle {
     constructor(newObstacleLeft) {
         this.left = newObstacleLeft;
         this.bottom = 60;
         this.visual = document.createElement("div");
-
         const visual = this.visual;
         visual.classList.add("obstacle");
         visual.style.left = this.left + "px";
@@ -68,30 +73,58 @@ class Obstacle {
     };
 };
 
+// air obstacle class
+class AirObstacle {
+    constructor(newObstacleLeft) {
+        this.left = newObstacleLeft;
+        this.bottom = 91;
+        this.visual = document.createElement("div");
+        const visual = this.visual;
+        visual.classList.add("obstacle");
+        visual.style.left = this.left + "px";
+        visual.style.bottom = this.bottom + "px";
+        grid.appendChild(visual);
+    };
+}
+
+// random number function
+function getRandomNumber() {
+    return randomNumber = Math.random()
+}
+
+
 // create obstacles function
 function createObstacles() {
     if (obstacleTimerid = false) return;
     for (let i = 0; i < obstacleCount; i++) {
         let obstacleGgap = 830 / obstacleCount;
         let newObstacleLeft = 830 + (i * obstacleGgap);
-        let newObstacle = new Obstacle(newObstacleLeft);
-        obstacles.push(newObstacle);
+        // randomly create ground or air obstacle
+        getRandomNumber()
+        if (randomNumber < .5) {
+            let newObstacle = new GroundObstacle(newObstacleLeft);
+            obstacles.push(newObstacle);
+            console.log("ground obstacle")
+        } else {
+            let newObstacle = new AirObstacle(newObstacleLeft);
+            obstacles.push(newObstacle);
+            console.log("air obstacle")
+        }
     }
 }
 
 // move obstacles function 
 function moveObstacles() {
     obstacleTimerId = setInterval(() => {
-
         obstacles.forEach((obstacle) => {
-            obstacle.left -=20;
+            obstacle.left -= 20;
             let visual = obstacle.visual;
             visual.style.left = obstacle.left + "px";
-    
+
             // player/obstacle collision
             obstacles.forEach((obstacle) => {
                 if (
-                    (playerBottomSpace >= obstacle.bottom) &&
+                    ((playerBottomSpace + 60) >= obstacle.bottom) &&
                     (playerBottomSpace <= (obstacle.bottom + 30)) &&
                     ((playerLeftSpace + 60) >= obstacle.left) &&
                     (playerLeftSpace <= (obstacle.left + 30))
@@ -99,25 +132,34 @@ function moveObstacles() {
                     gameOver();
                 };
             });
-    
+
+            // delete obstacle
             if (obstacle.left < -60) {
                 firstObstacle = obstacles[0].visual;
                 firstObstacle.classList.remove("obstacle");
                 obstacles.shift();
-                let newObstacle = new Obstacle(830);
-                obstacles.push(newObstacle);
+
+                // create new obstacle
+                getRandomNumber()
+                if (randomNumber < .5) {
+                    let newObstacle = new GroundObstacle(830);
+                    obstacles.push(newObstacle);
+                    console.log("ground obstacle")
+                } else {
+                    let newObstacle = new AirObstacle(830);
+                    obstacles.push(newObstacle);
+                    console.log("air obstacle")
+                }
             };
         });
-
     }, 30);
-
 };
 
 // jump function
 function jump() {
     if (isJumping) return;
     upTimerId = setInterval(() => {
-        if (playerBottomSpace > 200) {
+        if (playerBottomSpace > 140) {
             clearInterval(upTimerId);
             downTimerId = setInterval(() => {
                 if (playerBottomSpace <= 80) {
@@ -132,6 +174,31 @@ function jump() {
         playerBottomSpace += 20;
         player.style.bottom = playerBottomSpace + "px";
     }, 30);
+};
+
+// duck function
+function duck() {
+    if (isJumping) return;
+    if (isFalling) return;
+    playerBottomSpace = 30;
+    player.style.height = "30px"
+}
+
+// controls function
+function control(e) {
+    if (e.key === "ArrowUp") {
+        if (e.repeat) return;
+        jump();
+    };
+    if (e.key === "ArrowDown") {
+        duck()
+        document.addEventListener("keyup", function (e) {
+            if (e.key === "ArrowDown") {
+                playerBottomSpace = 60;
+                player.style.height = "60px"
+            }
+        })
+    }
 };
 
 // game over function
@@ -157,16 +224,10 @@ function gameOver() {
     clearInterval(obstacleTimerId);
     clearInterval(timerTimerId);
     isJumping = false;
-    
+    isFalling = false;
 };
 
-function control(e) {
-    if (e.key === "ArrowUp") {
-        if (e.repeat) return;
-        jump();
-    };
-};
-
+// start function
 function start() {
 
     // reset timer
@@ -185,10 +246,11 @@ function start() {
     // create player
     createPlayer();
 
-    // jump
+    // controls
     document.addEventListener("keydown", control);
 }
 
+// start the game
 play.addEventListener("click", function() {
     start();
 });
