@@ -20,6 +20,7 @@ let randomNumber;
 // control state variables
 let isJumping = false;
 let isFalling = false;
+let isDucking = false;
 
 // timer id variables
 let upTimerId;
@@ -153,6 +154,7 @@ function moveObstacles() {
 // jump function
 function jump() {
     if (isJumping) return;
+    if (isDucking) return;
     upTimerId = setInterval(() => {
         if (playerBottomSpace > 140) {
             clearInterval(upTimerId);
@@ -175,20 +177,22 @@ function jump() {
 function duck() {
     if (isJumping) return;
     if (isFalling) return;
+    isDucking = true;
     playerBottomSpace = 29;
     player.style.height = "30px"
 }
 
 // controls function
 function control(e) {
-    if (e.key === "ArrowUp") {
+    if (e.key === "w") {
         if (e.repeat) return;
         jump();
     };
-    if (e.key === "ArrowDown") {
+    if (e.key === "s") {
         duck()
         document.addEventListener("keyup", function (e) {
-            if (e.key === "ArrowDown") {
+            if (e.key === "s") {
+                isDucking = false;
                 playerBottomSpace = 60;
                 player.style.height = "60px"
             }
