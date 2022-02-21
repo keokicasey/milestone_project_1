@@ -27,6 +27,11 @@ let upTimerId;
 let downTimerId;
 let obstacleTimerId;
 
+// random number function
+function getRandomNumber() {
+    return randomNumber = Math.random();
+};
+
 // start timer function
 function startTimer() {
     timerTimerId = setInterval(() => {
@@ -56,11 +61,11 @@ function createPlayer() {
     player.style.bottom = 60 + "px";
 };
 
-// ground obstacle class
-class GroundObstacle {
-    constructor(newObstacleLeft) {
+// obstacle class
+class Obstacle {
+    constructor(newObstacleLeft, newObstacleBottom) {
         this.left = newObstacleLeft;
-        this.bottom = 60;
+        this.bottom = newObstacleBottom;
         this.visual = document.createElement("div");
         const visual = this.visual;
         visual.classList.add("obstacle");
@@ -68,41 +73,22 @@ class GroundObstacle {
         visual.style.bottom = this.bottom + "px";
         grid.appendChild(visual);
     };
-};
-
-// air obstacle class
-class AirObstacle {
-    constructor(newObstacleLeft) {
-        this.left = newObstacleLeft;
-        this.bottom = 90;
-        this.visual = document.createElement("div");
-        const visual = this.visual;
-        visual.classList.add("obstacle");
-        visual.style.left = this.left + "px";
-        visual.style.bottom = this.bottom + "px";
-        grid.appendChild(visual);
-    };
-};
-
-// random number function
-function getRandomNumber() {
-    return randomNumber = Math.random();
 };
 
 // create obstacles function
 function createObstacles() {
     if (obstacleTimerid = false) return;
     for (let i = 0; i < obstacleCount; i++) {
-        let obstacleGgap = 830 / obstacleCount;
-        let newObstacleLeft = 830 + (i * obstacleGgap);
 
         // randomly create ground or air obstacle
         getRandomNumber();
         if (randomNumber < .5) {
-            let newObstacle = new GroundObstacle(newObstacleLeft);
+            // ground obstacle
+            let newObstacle = new Obstacle(830, 60);
             obstacles.push(newObstacle);
         } else {
-            let newObstacle = new AirObstacle(newObstacleLeft);
+            // air obstacle
+            let newObstacle = new Obstacle(830, 90);
             obstacles.push(newObstacle);
         };
     };
@@ -135,10 +121,10 @@ function moveObstacles() {
                 // create new obstacle
                 getRandomNumber()
                 if (randomNumber < .5) {
-                    let newObstacle = new GroundObstacle(830);
+                    let newObstacle = new Obstacle(830, 60);
                     obstacles.push(newObstacle);
                 } else {
-                    let newObstacle = new AirObstacle(830);
+                    let newObstacle = new Obstacle(830, 90);
                     obstacles.push(newObstacle);
                 }
             };
@@ -179,14 +165,15 @@ function duck() {
 
 // controls function
 function control(e) {
-    if (e.key === "w") {
+    if (e.keyCode === 32) {
         if (e.repeat) return;
         jump();
     };
-    if (e.key === "s") {
+    if (e.key === "Shift") {
         duck();
         document.addEventListener("keyup", function (e) {
-            if (e.key === "s") {
+            if (e.key === "Shift") {
+                if (isJumping) return;
                 isDucking = false;
                 playerBottomSpace = 60;
                 player.style.height = "60px";
@@ -253,3 +240,6 @@ function start() {
 play.addEventListener("click", function() {
     start();
 });
+
+// https://github.com/keokicasey/milestone_project_1.git
+// https://keokicasey.github.io/milestone_project_1/

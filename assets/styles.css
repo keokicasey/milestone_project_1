@@ -70,3 +70,11 @@ body {
     background-color: #252525;
     position: absolute;
 }
+
+.controls {
+    color:#252525;
+    display: flex;
+    justify-content: space-between;
+    margin: auto;
+    width: 800px;
+}
