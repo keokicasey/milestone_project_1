@@ -194,6 +194,7 @@ function gameOver() {
     // clear control states
     isJumping = false;
     isFalling = false;
+    isDucking = false;
 
     // remove obstacles
     obstacles.forEach((i) => {
@@ -240,6 +241,3 @@ function start() {
 play.addEventListener("click", function() {
     start();
 });
-
-// https://github.com/keokicasey/milestone_project_1.git
-// https://keokicasey.github.io/milestone_project_1/
