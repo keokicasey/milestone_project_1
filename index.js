@@ -78,19 +78,17 @@ class Obstacle {
 // create obstacles function
 function createObstacles() {
     if (obstacleTimerid = false) return;
-    for (let i = 0; i < obstacleCount; i++) {
 
-        // randomly create ground or air obstacle
-        getRandomNumber();
-        if (randomNumber < .5) {
-            // ground obstacle
-            let newObstacle = new Obstacle(830, 60);
-            obstacles.push(newObstacle);
-        } else {
-            // air obstacle
-            let newObstacle = new Obstacle(830, 90);
-            obstacles.push(newObstacle);
-        };
+    // randomly create ground or air obstacle
+    getRandomNumber();
+    if (randomNumber < .5) {
+        // ground obstacle
+        let newObstacle = new Obstacle(830, 60);
+        obstacles.push(newObstacle);
+    } else {
+        // air obstacle
+        let newObstacle = new Obstacle(830, 90);
+        obstacles.push(newObstacle);
     };
 };
 
@@ -119,14 +117,7 @@ function moveObstacles() {
                 obstacles.shift();
 
                 // create new obstacle
-                getRandomNumber()
-                if (randomNumber < .5) {
-                    let newObstacle = new Obstacle(830, 60);
-                    obstacles.push(newObstacle);
-                } else {
-                    let newObstacle = new Obstacle(830, 90);
-                    obstacles.push(newObstacle);
-                }
+                createObstacles()
             };
         });
     }, 30);
